@@ -29,7 +29,7 @@ while [ "$1" != "" ]; do
     shift
 done
 
-if [ X"${PERSONALITY}" == "Xvrs" ]
+if [ "${PERSONALITY}" == "vrs" ]
 then
     if [ ${cleanup} == "true" ]
     then
