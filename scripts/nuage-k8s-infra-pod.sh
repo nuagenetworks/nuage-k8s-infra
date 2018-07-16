@@ -11,8 +11,8 @@ function go_to_idle_state () {
 
 cleanup="false"
 route_table_id="501"
-veth1_name="nuage-infra-1"
-veth2_name="nuage-infra-2"
+veth1_name="inf-nu-1"
+veth2_name="inf-nu-2"
 router_pod_traffic_mark="0xabc/0xabc"
 vport_resolve_config_file="/tmp/config.yaml"
 vport_resolve_bin_file="/usr/bin/nuage-k8s-infra"
