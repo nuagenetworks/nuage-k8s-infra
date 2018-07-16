@@ -62,7 +62,7 @@ then
   exit
 fi
 
-args=${vport_resolve_config_file}
+args="-config=${vport_resolve_config_file}"
 if [ ${cleanup} == "true" ]
 then
     args="${args} -cleanup"
