@@ -76,8 +76,8 @@ metadata:
     username: ${VSP_USER}
     enterprise: ${VSP_ENTERPRISE}
     domain: ${VSP_DOMAIN}
-    zone: "default"
-    subnet: "default-0"
+    zone: "kube-system"
+    subnet: "kube-system-0"
     networktype: "ipv4"
 interface:
     veth1: ${veth1_name}
