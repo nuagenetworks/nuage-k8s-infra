@@ -7,7 +7,7 @@ function go_to_idle_state () {
     echo "Nuage infra pod going to idle state..."
     while :
     do
-        sleep 10;
+        sleep 86400;
     done
 }
 
@@ -126,8 +126,7 @@ fi
 ### Disable reverse path filter check for this interface. This is 
 ### being done for other pat tap interfaces too
 ####################################################################
-/usr/sbin/sysctl -w net.ipv4.conf.all.rp_filter=0
-/usr/sbin/sysctl net.ipv4.conf.${veth1_name}.rp_filter=0
-/usr/sbin/sysctl net.ipv4.conf.${veth2_name}.rp_filter=0
+/usr/sbin/sysctl -w net.ipv4.conf.${veth1_name}.rp_filter=2
+/usr/sbin/sysctl -w net.ipv4.conf.${veth2_name}.rp_filter=2
 
 go_to_idle_state
