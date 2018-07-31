@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 ### Go to idle state.
 function go_to_idle_state () {
     echo "Nuage infra pod going to idle state..."
@@ -91,11 +93,11 @@ then
     ####################################################################
     ### Delete route table entries to redirect traffic through
     ####################################################################
-    /usr/sbin/iptables -t mangle -D OUTPUT -d ${POD_NETWORK_CIDR} -j MARK --set-mark ${router_pod_traffic_mark} >& /dev/null
-    /sbin/ip route del table ${route_table_id} ${gateway} dev ${veth2_name} >& /dev/null
-    /sbin/ip route del table ${route_table_id} ${POD_NETWORK_CIDR} via ${gateway} dev ${veth2_name} >& /dev/null
-    /sbin/ip rule del fwmark ${router_pod_traffic_mark} table ${route_table_id} >& /dev/null
-    /usr/sbin/iptables -t nat -D POSTROUTING -o ${veth2_name} -j MASQUERADE >& /dev/null
+    /usr/sbin/iptables -t mangle -D OUTPUT -d ${POD_NETWORK_CIDR} -j MARK --set-mark ${router_pod_traffic_mark}
+    /sbin/ip route del table ${route_table_id} ${gateway} dev ${veth2_name}
+    /sbin/ip route del table ${route_table_id} ${POD_NETWORK_CIDR} via ${gateway} dev ${veth2_name}
+    /sbin/ip rule del fwmark ${router_pod_traffic_mark} table ${route_table_id}
+    /usr/sbin/iptables -t nat -D POSTROUTING -o ${veth2_name} -j MASQUERADE
     exit
 fi
 
@@ -109,23 +111,23 @@ fi
 ### Create route table entries to redirect traffic through
 ### new overlay vport
 ####################################################################
-/usr/sbin/iptables -t mangle -A OUTPUT -d ${POD_NETWORK_CIDR} -j MARK --set-mark ${router_pod_traffic_mark} >& /dev/null
-/sbin/ip rule add fwmark ${router_pod_traffic_mark} table ${route_table_id} >& /dev/null
-/sbin/ip route add ${gateway} dev ${veth2_name} >& /dev/null
-/sbin/ip route add ${POD_NETWORK_CIDR} via ${gateway} dev ${veth2_name} >& /dev/null
-/sbin/ip route add table ${route_table_id} ${gateway} dev ${veth2_name} >& /dev/null
-/sbin/ip route add table ${route_table_id} ${POD_NETWORK_CIDR} via ${gateway} dev ${veth2_name} >& /dev/null
-/sbin/ip route del ${gateway} dev ${veth2_name} >& /dev/null
-/sbin/ip route del ${POD_NETWORK_CIDR} via ${gateway} dev ${veth2_name} >& /dev/null
-/sbin/ip route flush cache >& /dev/null
-/usr/sbin/iptables -t nat -A POSTROUTING -o ${veth2_name} -j MASQUERADE >& /dev/null
+/usr/sbin/iptables -t mangle -A OUTPUT -d ${POD_NETWORK_CIDR} -j MARK --set-mark ${router_pod_traffic_mark}
+/sbin/ip rule add fwmark ${router_pod_traffic_mark} table ${route_table_id}
+/sbin/ip route add ${gateway} dev ${veth2_name}
+/sbin/ip route add ${POD_NETWORK_CIDR} via ${gateway} dev ${veth2_name}
+/sbin/ip route add table ${route_table_id} ${gateway} dev ${veth2_name}
+/sbin/ip route add table ${route_table_id} ${POD_NETWORK_CIDR} via ${gateway} dev ${veth2_name}
+/sbin/ip route del ${gateway} dev ${veth2_name}
+/sbin/ip route del ${POD_NETWORK_CIDR} via ${gateway} dev ${veth2_name}
+/sbin/ip route flush cache
+/usr/sbin/iptables -t nat -A POSTROUTING -o ${veth2_name} -j MASQUERADE
 
 ####################################################################
 ### Disable reverse path filter check for this interface. This is 
 ### being done for other pat tap interfaces too
 ####################################################################
-/usr/sbin/sysctl -w net.ipv4.conf.all.rp_filter=0 >& /dev/null
-/usr/sbin/sysctl net.ipv4.conf.${veth1_name}.rp_filter=0 >& /dev/null
-/usr/sbin/sysctl net.ipv4.conf.${veth2_name}.rp_filter=0 >& /dev/null
+/usr/sbin/sysctl -w net.ipv4.conf.all.rp_filter=0
+/usr/sbin/sysctl net.ipv4.conf.${veth1_name}.rp_filter=0
+/usr/sbin/sysctl net.ipv4.conf.${veth2_name}.rp_filter=0
 
 go_to_idle_state
