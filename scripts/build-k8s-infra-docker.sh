@@ -22,6 +22,6 @@ done
 
 cd $GOPATH/src/github.com/nuagenetworks/nuage-k8s-infra
 
-sudo docker build -t nuage/infra:${version} .
+sudo docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy} --build-arg no_proxy=${no_proxy} -t nuage/infra:${version} .
 docker save nuage/infra:${version} > nuage-infra-docker-${version}.tar
 docker rmi nuage/infra:${version}
