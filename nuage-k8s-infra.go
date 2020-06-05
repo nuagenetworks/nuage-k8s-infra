@@ -115,7 +115,7 @@ func main() {
 	entityInfo.UUID = config.UUID
 	err = vrsConnection.AddPortToAlubr0(config.Interface.Veth1, entityInfo)
 	if err != nil {
-		log.Fatal("Error inserting row in alubr0: %v", err)
+		log.Fatalf("Error inserting row in alubr0: %v", err)
 		return
 	}
 
@@ -182,7 +182,7 @@ func main() {
 		return
 	}
 	ticker := time.NewTicker(10 * time.Second)
-	portInfo := &api.PortIPv4Info{}
+	var portInfo *api.PortIPv4Info
 	select {
 	case portInfo = <-portInfoUpdateChan:
 	case <-ticker.C:

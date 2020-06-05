@@ -1,0 +1,27 @@
+- project:
+    templates:
+      - golang-jobs
+    check:
+      jobs:
+        - golang-lint
+        - k8s-infra-build-image
+    gate:
+      jobs:
+        - golang-lint
+        - k8s-infra-build-image
+- job:
+    name: k8s-infra-build-image
+    parent: nuage-build-docker-image
+    required-projects:
+      - nuagenetworks/nuage-k8s-infra
+    vars:
+      zuul_work_dir: "{{ ansible_user_dir }}/src/github.com"
+      container_command: docker
+      docker_images:
+        - context: nuagenetworks/nuage-k8s-infra
+          go_task: build
+          dockerfile: Dockerfile
+          repository: nuage/infra
+          build_args:
+            - "http_proxy={{ proxy_env.http_proxy if proxy_env is defined else '' }}"
+            - "https_proxy={{ proxy_env.https_proxy if proxy_env is defined else '' }}"
