@@ -1,4 +1,4 @@
-FROM centos:centos7
+FROM registry.access.redhat.com/ubi8/ubi:latest
 
 RUN yum install -y iptables iproute
 
